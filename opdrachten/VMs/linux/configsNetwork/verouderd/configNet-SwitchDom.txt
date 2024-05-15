@@ -1,0 +1,151 @@
+hostname DommeSwitch
+!
+vlan 11
+ name Clients
+!
+interface FastEthernet0/1
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/2
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/3
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/4
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/5
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/6
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/7
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/8
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/9
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/10
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/11
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/12
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/13
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/14
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/15
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/16
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/17
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/18
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/19
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/20
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/21
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/22
+ description Connection Client
+ switchport access vlan 11
+ switchport mode access
+!
+interface FastEthernet0/23
+ description Connection CoreSwitch-2
+ switchport trunk allowed vlan 1,11,13,42
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface FastEthernet0/24
+ description Connection CoreSwitch-1
+ switchport trunk allowed vlan 1,11,13,42
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface GigabitEthernet0/1
+ shutdown
+!
+interface GigabitEthernet0/2
+ shutdown
+!
+interface Vlan4
+ ip address 192.168.102.197 255.255.255.240
+ ipv6 address fd69:6f00:73d8:2c04::5/64
+!
+banner motd #
+Warning: This system is restricted to RBMK authorized users for business purposes only.
+Unauthorized access or use is a violation of company policy and the law.
+This system may be monitored for administrative oversight and to ensure appropriate security measures are maintained.
+If unauthorized use is suspected, your activities may be reviewed and shared with law enforcement.
+The RBMK-IT Department can be contacted at wout.detemmerman@student.hogent.be for any issues or questions.
+#
+!
+line con 0
+ password 7 082048430017
+ login
+!
+end
+

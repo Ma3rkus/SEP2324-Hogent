@@ -1,0 +1,199 @@
+service password-encryption
+!
+hostname CoreSwitch-2
+!
+ip ssh version 2
+ip domain-name RBMK
+!
+username admin secret 5 $1$mERr$vTbHul1N28cEp8lkLqr0f/
+!
+vlan 11
+ name Clients
+!
+vlan 13
+ name DMZ
+!
+vlan 42
+ name Servers
+!
+vlan 99
+ name ParkingLot
+!
+ip arp inspection vlan 1-4094
+ip arp inspection validate src-mac dst-mac ip
+!
+ip dhcp snooping vlan 1-4094
+!
+interface FastEthernet0/1
+ description Connection Servers
+ switchport access vlan 42
+ switchport mode access
+ ip dhcp snooping trust
+ ip arp inspection trust
+!
+interface FastEthernet0/2
+ description Connection TFTP
+ switchport access vlan 1
+ switchport mode access
+ ip dhcp snooping trust
+ ip arp inspection trust
+!
+interface FastEthernet0/3
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/4
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/5
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/6
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/8
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/10
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/11
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/12
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/13
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/14
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/19
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/20
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/21
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/23
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/24
+ description Connection to Unmanaged Switch for Clients
+ switchport access vlan 11
+ switchport mode access
+ ip dhcp snooping limit rate 20
+ no ip arp inspection trust
+ switchport port-security
+ switchport port-security maximum 120
+ switchport port-security violation restrict
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+!
+interface GigabitEthernet0/1
+ description Connection Default Gateway
+ switchport trunk native vlan 1
+ switchport trunk allowed vlan 1,11,13,42
+ ip dhcp snooping trust
+ ip arp inspection trust
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface GigabitEthernet0/2
+ description Connection Redundante Switch
+ switchport trunk native vlan 1
+ switchport trunk allowed vlan 1,11,13,42
+ ip dhcp snooping trust
+ ip arp inspection trust
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Vlan4
+ ip address 192.168.102.196 255.255.255.240
+ ipv6 address fd69:6f00:73d8:2c04::4/64
+!
+banner motd #
+Warning: This system is restricted to RBMK authorized users for business purposes only.
+Unauthorized access or use is a violation of company policy and the law.
+This system may be monitored for administrative oversight and to ensure appropriate security measures are maintained.
+If unauthorized use is suspected, your activities may be reviewed and shared with law enforcement.
+The RBMK-IT Department can be contacted at wout.detemmerman@student.hogent.be for any issues or questions.
+#
+!
+line con 0
+ password 7 082048430017
+ login
+!
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

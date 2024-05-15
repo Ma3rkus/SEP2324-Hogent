@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Drives clsid="{8FDDCC1A-0C3C-43cd-A6B4-71A6DF20DA8C}"><Drive clsid="{935D1B74-9CB8-4e3c-9914-7DD559B7A417}" name="H:" status="H:" image="2" bypassErrors="1" changed="2024-03-27 16:59:36" uid="{7C26633C-596F-41EF-A420-E298237B72B4}"><Properties action="U" thisDrive="NOCHANGE" allDrives="NOCHANGE" userName="" path="\\winserv1\%username%" label="Home" persistent="0" useLetter="1" letter="H"/></Drive>
+	<Drive clsid="{935D1B74-9CB8-4e3c-9914-7DD559B7A417}" name="Z:" status="Z:" image="3" changed="2024-03-27 16:59:47" uid="{C8884047-F686-4F26-9F03-0E97312FA85A}"><Properties action="D" thisDrive="NOCHANGE" allDrives="NOCHANGE" userName="" path="" label="" persistent="0" useLetter="1" letter="Z"/></Drive>
+</Drives>

@@ -1,0 +1,23 @@
+[Version]
+Signature="$Windows NT$"
+
+[NewRequest]
+Subject = "CN=g02-rbmk.internal, C=BE, O=RBMK, L=Gent, S=Oost-Vlaanderen"
+KeyLength = 4096
+KeySpec = 1
+KeyUsage = 0xA0
+MachineKeySet = True
+ProviderName = "Microsoft RSA SChannel Cryptographic Provider"
+ProviderType = 12
+RequestType = PKCS10
+Exportable = TRUE
+FriendlyName = "web"
+HashAlgorithm = SHA256
+
+[Extensions]
+2.5.29.17 = "{text}"
+_continue_ = "dns=g02-rbmk.internal&"
+_continue_ = "dns=*.g02-rbmk.internal&"
+
+[RequestAttributes]
+CertificateTemplate = WebServer

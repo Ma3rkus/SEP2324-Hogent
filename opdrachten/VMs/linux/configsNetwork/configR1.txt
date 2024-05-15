@@ -1,0 +1,124 @@
+service password-encryption
+!
+ip ssh version 2
+!
+username admin secret 5 $1$mERr$vTbHul1N28cEp8lkLqr0f/
+!
+hostname CoreRouter1
+!
+ipv6 unicast-routing
+!
+interface GigabitEthernet0/0/0
+ description NAT_1
+ ip address 172.22.200.2 255.255.0.0
+ ip nat outside
+ no shutdown
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ ip nat inside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.1
+ description Subinterface TFTP 1
+ encapsulation dot1Q 1
+ ip address 192.168.102.205 255.255.255.240
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c01::a:1/64
+ standby version 2
+ standby 14 ip 192.168.102.193
+ standby 14 priority 1
+ standby 14 preempt
+ standby 16 ipv6 fd69:6f00:73d8:2c01::1/64
+ standby 16 priority 1
+ standby 16 preempt
+!
+interface GigabitEthernet0/0/1.11
+ description Subinterface Clients 1
+ encapsulation dot1Q 11
+ ip address 192.168.102.125 255.255.255.128
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c11::a:1/64
+ ip helper-address 192.168.102.130
+ ip helper-address 192.168.102.136
+ ipv6 dhcp relay destination fd69:6f00:73d8:2c42::2
+ ipv6 dhcp relay destination fd69:6f00:73d8:2c42::8
+ standby version 2
+ standby 114 ip 192.168.102.1
+ standby 114 priority 1
+ standby 114 preempt
+ standby 116 ipv6 fd69:6f00:73d8:2c11::1/64
+ standby 116 priority 1
+ standby 116 preempt
+!
+interface GigabitEthernet0/0/1.13
+ description Subinterface DMZ 2
+ encapsulation dot1Q 13
+ ip address 192.168.102.229 255.255.255.248
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c13::a:1/64
+ standby version 2
+ standby 134 ip 192.168.102.225
+ standby 134 priority 2
+ standby 134 preempt
+ standby 136 ipv6 fd69:6f00:73d8:2c13::1/64
+ standby 136 priority 2
+ standby 136 preempt
+!
+interface GigabitEthernet0/0/1.42
+ description Subinterface Servers 2
+ encapsulation dot1Q 42
+ ip address 192.168.102.157 255.255.255.224
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c42::a:1/64
+ standby version 2
+ standby 424 ip 192.168.102.129
+ standby 424 priority 2
+ standby 424 preempt
+ standby 426 ipv6 fd69:6f00:73d8:2c42::1/64
+ standby 426 priority 2
+ standby 426 preempt
+!
+line con 0
+ password 7 082048430017 
+ login
+ exec-timeout 15 0
+ !
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+route-map RM_NAT_80 permit 10
+ match ip address ACL_OUTSIDE_TO_DMZ_80
+!
+route-map RM_NAT_443 permit 10
+ match ip address ACL_OUTSIDE_TO_DMZ_443
+!
+ip nat inside source list ACL_NAT interface GigabitEthernet0/0/0 overload
+ip nat inside source static tcp 192.168.102.226 80 172.22.200.2 80 route-map RM_NAT_80
+ip nat inside source static tcp 192.168.102.226 443 172.22.200.2 443 route-map RM_NAT_443
+!
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/0
+!
+ip access-list extended ACL_NAT
+ remark Use for NAT
+ permit ip 192.168.102.0 0.0.0.255 any
+!
+ip access-list extended ACL_OUTSIDE_TO_DMZ_80
+ permit tcp any host 172.22.200.2 eq 80
+
+ip access-list extended ACL_OUTSIDE_TO_DMZ_443
+ permit tcp any host 172.22.200.2 eq 443
+!
+banner motd #
+Warning: This system is restricted to RBMK authorized users for business purposes only.
+Unauthorized access or use is a violation of company policy and the law.
+This system may be monitored for administrative oversight and to ensure appropriate security measures are maintained.
+If unauthorized use is suspected, your activities may be reviewed and shared with law enforcement.
+The RBMK-IT Department can be contacted at wout.detemmerman@student.hogent.be for any issues or questions.
+#
+!
+end

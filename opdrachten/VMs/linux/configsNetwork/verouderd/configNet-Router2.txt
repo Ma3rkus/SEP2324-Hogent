@@ -1,0 +1,200 @@
+!
+hostname CoreRouter2
+!
+ipv6 unicast-routing
+!
+interface GigabitEthernet0/0/0
+ description NAT_2
+ ip address 172.22.200.202 255.255.0.0
+ ip nat outside
+ standby 4 ip 172.22.200.2
+ standby 4 priority 2
+ standby 4 preempt
+ no shutdown
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ ip access-group ACL_GENERAL_IN_OUT in
+ ip access-group ACL_GENERAL_IN_OUT out
+ ip nat inside
+ no shutdown
+!
+interface GigabitEthernet0/0/1.1
+ description Subinterface TFTP 2
+ encapsulation dot1Q 1
+ ip address 192.168.102.206 255.255.255.240
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c01::b:1/64
+ standby version 2
+ standby 44 ip 192.168.102.193
+ standby 44 priority 2
+ standby 44 preempt
+ standby 46 ipv6 fd69:6f00:73d8:2c01::1/64
+ standby 46 priority 2
+ standby 46 preempt
+!
+interface GigabitEthernet0/0/1.11
+ description Subinterface Clients 2
+ encapsulation dot1Q 11
+ ip address 192.168.102.126 255.255.255.128
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c11::b:1/64
+ ip helper-address 192.168.102.130
+ ip helper-address 192.168.102.136
+ ipv6 dhcp relay destination fd69:6f00:73d8:2c42::2
+ ipv6 dhcp relay destination fd69:6f00:73d8:2c42::8
+ standby version 2
+ standby 114 ip 192.168.102.1
+ standby 114 priority 2
+ standby 114 preempt
+ standby 116 ipv6 fd69:6f00:73d8:2c11::1/64
+ standby 116 priority 2
+ standby 116 preempt
+!
+interface GigabitEthernet0/0/1.13
+ description Subinterface DMZ 1
+ encapsulation dot1Q 13
+ ip address 192.168.102.230 255.255.255.248
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c13::b:1/64
+ standby version 2
+ standby 134 ip 192.168.102.225
+ standby 134 priority 1
+ standby 134 preempt
+ standby 136 ipv6 fd69:6f00:73d8:2c13::1/64
+ standby 136 priority 1
+ standby 136 preempt
+!
+interface GigabitEthernet0/0/1.42
+ description Subinterface Servers 1
+ encapsulation dot1Q 42
+ ip address 192.168.102.158 255.255.255.224
+ ip nat inside
+ ipv6 address fd69:6f00:73d8:2c42::b:1/64
+ standby version 2
+ standby 424 ip 192.168.102.129
+ standby 424 priority 1
+ standby 424 preempt
+ standby 426 ipv6 fd69:6f00:73d8:2c42::1/64
+ standby 426 priority 1
+ standby 426 preempt
+!
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/0
+ipv6 route ::/0 GigabitEthernet0/0/0
+!
+ip access-list extended ACL_GENERAL_IN_OUT
+ remark Allow ssh within network
+ permit tcp 192.168.102.0 0.0.0.255 any eq 22 log
+!
+ip access-list extended ACL_TFTP_OUTBOUND
+ remark Allow TFTP to Network-Devices
+ permit udp host 192.168.102.195 192.168.102.192 0.0.0.15 eq 69
+ remark Allow TFTP to Clients (for testing purposes only)
+ permit ip host 192.168.102.195 192.168.102.0 0.0.0.127
+ deny ip any any
+ip access-list extended ACL_TFTP_INBOUND
+ remark Rules for messages sent towards TFTP
+ permit udp 192.168.102.192 0.0.0.15 host 192.168.102.195 eq 69
+ deny ip any any
+!
+ip access-list extended ACL_CLIENT_OUTBOUND
+ remark Allow DHCP traffic
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.130 eq 67
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.130 eq 68
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.136 eq 67
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.136 eq 68
+ remark Allow AD traffic
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.130
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.136
+ remark Allow webtraffic to DMZ
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.226 eq 443
+ remark Allow traffic between Clients
+ permit ip 192.168.102.0 0.0.0.127 192.168.102.0 0.0.0.127
+ remark Allow traffic outside Network
+ deny ip 192.168.102.0 0.0.0.127 192.168.102.0 0.0.0.255
+ permit ip 192.168.102.0 0.0.0.127 0.0.0.0 255.255.255.255
+ip access-list extended ACL_CLIENT_INBOUND
+ remark Allow DHCP traffic
+ permit udp host 192.168.102.130 192.168.102.0 0.0.0.127 eq 67
+ permit udp host 192.168.102.130 192.168.102.0 0.0.0.127 eq 68
+ permit udp host 192.168.102.136 192.168.102.0 0.0.0.127 eq 67
+ permit udp host 192.168.102.136 192.168.102.0 0.0.0.127 eq 68
+ remark Allow AD traffic
+ permit tcp host 192.168.102.130 192.168.102.0 0.0.0.127
+ permit tcp host 192.168.102.136 192.168.102.0 0.0.0.127
+ remark Allow webtraffic from DMZ
+ permit tcp host 192.168.102.226 192.168.102.0 0.0.0.127 eq 443
+ remark Allow traffic between Clients
+ permit ip 192.168.102.0 0.0.0.127 192.168.102.0 0.0.0.127
+ remark Allow traffic outside Network
+ deny ip 192.168.102.0 0.0.0.255 192.168.102.0 0.0.0.127
+ permit ip 0.0.0.0 255.255.255.255 192.168.102.0 0.0.0.127
+!
+ip access-list extended ACL_DMZ_OUTBOUND
+ remark Allow DMZ to use DNS
+ permit tcp host 192.168.102.226 host 192.168.102.130 eq 53
+ permit tcp host 192.168.102.226 host 192.168.102.136 eq 53
+ permit udp host 192.168.102.226 host 192.168.102.130 eq 53
+ permit udp host 192.168.102.226 host 192.168.102.136 eq 53
+ remark Allow webtraffic to Servers
+ permit tcp host 192.168.102.226 192.168.102.128 0.0.0.31 eq 80
+ remark Allow webtraffic to Clients
+ permit tcp host 192.168.102.226 192.168.102.0 0.0.0.127 eq 443
+ remark Allow traffic to outside Network
+ deny ip host 192.168.102.226 192.168.102.0 0.0.0.255
+ permit tcp host 192.168.102.226 0.0.0.0 255.255.255.255 eq 443
+ip access-list extended ACL_DMZ_INBOUND
+ remark Allow DMZ to use DNS
+ permit tcp host 192.168.102.130 host 192.168.102.226 eq 53
+ permit tcp host 192.168.102.136 host 192.168.102.226 eq 53
+ permit udp host 192.168.102.130 host 192.168.102.226 eq 53
+ permit udp host 192.168.102.136 host 192.168.102.226 eq 53
+ remark Allow webtraffic from Servers
+ permit tcp 192.168.102.128 0.0.0.31 host 192.168.102.226 eq 80
+ remark Allow webtraffic from Clients
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.226 eq 443
+ remark Allow traffic from outside Network
+ deny ip 192.168.102.0 0.0.0.255 host 192.168.102.226
+ permit tcp 0.0.0.0 255.255.255.255 host 192.168.102.226 eq 443
+!
+ip access-list extended ACL_SERVERS_OUTBOUND
+ remark Allow Servers to communicate with Eachother
+ permit ip 192.168.102.128 0.0.0.31 192.168.102.128 0.0.0.31
+ remark Allow DNS to access DMZ
+ permit tcp host 192.168.102.130 host 192.168.102.226 eq 53
+ permit tcp host 192.168.102.136 host 192.168.102.226 eq 53
+ permit udp host 192.168.102.130 host 192.168.102.226 eq 53
+ permit udp host 192.168.102.136 host 192.168.102.226 eq 53
+ remark Allow Webtraffic to DMZ
+ permit tcp 192.168.102.128 0.0.0.31 192.168.102.226 eq 80
+ remark Allow DHCP to Clients
+ permit udp host 192.168.102.130 192.168.102.0 0.0.0.127 eq 67
+ permit udp host 192.168.102.130 192.168.102.0 0.0.0.127 eq 68
+ permit udp host 192.168.102.136 192.168.102.0 0.0.0.127 eq 67
+ permit udp host 192.168.102.136 192.168.102.0 0.0.0.127 eq 68
+ remark Allow AD to Clients
+ permit tcp host 192.168.102.130 192.168.102.0 0.0.0.127
+ permit tcp host 192.168.102.136 192.168.102.0 0.0.0.127
+ deny ip any any
+ip access-list extended ACL_SERVERS_INBOUND
+ remark Allow Servers to communicate with Eachother
+ permit ip 192.168.102.128 0.0.0.31 192.168.102.128 0.0.0.31 
+ remark Allow webtraffic from DMZ to Servers
+ permit tcp host 192.168.102.226 192.168.102.128 0.0.0.31 eq 80
+ remark Allow DMZ to use DNS
+ permit tcp host 192.168.102.226 host 192.168.102.130 eq 53
+ permit tcp host 192.168.102.226 host 192.168.102.136 eq 53
+ permit udp host 192.168.102.226 host 192.168.102.130 eq 53
+ permit udp host 192.168.102.226 host 192.168.102.136 eq 53
+ remark Allow DHCP traffic
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.130 eq 67
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.130 eq 68
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.136 eq 67
+ permit udp 192.168.102.0 0.0.0.127 host 192.168.102.136 eq 68
+ remark Allow AD traffic
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.130
+ permit tcp 192.168.102.0 0.0.0.127 host 192.168.102.136
+ deny ip any any
+!
+end

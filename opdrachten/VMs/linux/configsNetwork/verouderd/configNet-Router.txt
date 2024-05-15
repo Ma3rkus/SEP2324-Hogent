@@ -1,0 +1,34 @@
+!
+hostname CoreRouter1
+!
+interface GigabitEthernet0/0/0
+ description Connection Default Gateway
+ ip address 192.168.102.253 255.255.255.252
+!
+interface GigabitEthernet0/0/1
+ no ip address
+!
+interface GigabitEthernet0/0/1.1
+ description Subinterface TFTP
+ encapsulation dot1Q 1 native
+ ip address 192.168.102.193 255.255.255.240
+!
+interface GigabitEthernet0/0/1.11
+ description Subinterface Clients
+ encapsulation dot1Q 11
+ ip address 192.168.102.1 255.255.255.128
+ ip helper-address 192.168.102.130
+!
+interface GigabitEthernet0/0/1.13
+ description Subinterface DMZ
+ encapsulation dot1Q 13
+ ip address 192.168.102.225 255.255.255.248
+!
+interface GigabitEthernet0/0/1.42
+ description Subinterface Servers
+ encapsulation dot1Q 42
+ ip address 192.168.102.129 255.255.255.224
+!
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/0
+!
+end

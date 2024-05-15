@@ -1,0 +1,17 @@
+Naam;Path
+RBMK-Computers;DC=ad,DC=G02-RBMK,DC=internal
+RBMK-Users;DC=ad,DC=G02-RBMK,DC=internal
+NetworkAdministrators;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+Management;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+Development;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+HR;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+Sales;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+PublicRelations;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+Extern;OU=RBMK-Users,DC=ad,DC=G02-RBMK,DC=internal
+NetworkAdministrators;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+Management;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+Development;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+HR;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+Sales;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+PublicRelations;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
+Extern;OU=RBMK-Computers,DC=ad,DC=G02-RBMK,DC=internal
