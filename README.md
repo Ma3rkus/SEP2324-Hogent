@@ -5,7 +5,7 @@
 | Xander Dheedene | [XanderDheedene](https://github.com/XanderDheedene) |
 | Neal Joos       | [nealjoos](https://github.com/nealjoos)             |
 | Wout De Temmerman        | [Wout-De-Temmerman](https://github.com/Wout-De-Temmerman)             |
-| Maarten Adriaenssens        | [Maarten-Adriaenssens](https://github.com/Maarten-Adriaenssens)             |
+| Maarten Adriaenssens        | [Maarten-Adriaenssens](https://github.com/Maarten-Adriaenssens)  / [Maarten-Adriaenssens](https://github.com/Ma3rkus)           |
 | Tariq Asifi        | [Tariq-Asifi](https://github.com/tariqasifi)             |
 
 Dit is de repository voor het projectvak System Engineering Project.
